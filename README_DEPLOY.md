@@ -1,25 +1,29 @@
-# 足球是个圆的 v1.2 - 公网部署包
+# 足球是个圆的 v1.3
 
-这是一个纯静态网页项目，核心文件是 `index.html`。
+这是一个足球体彩概率、EV（Expected Value，数学期望 / 赔率价值）与仓位风控模型的公网网页版。
 
-## 最快上线方式：Netlify Drop
-1. 打开 Netlify 并登录。
-2. 找到 Deploy / Add new site / Deploy manually / Drop folder 类似入口。
-3. 上传整个 `football_is_round_v1_2_public_deploy` 文件夹。
-4. 部署成功后会生成一个 `*.netlify.app` 公网链接。
+## 当前版本
 
-## Vercel 方式
-1. 新建 GitHub 仓库，把本文件夹里的所有文件上传进去。
-2. 在 Vercel 里 New Project，导入该 GitHub 仓库。
-3. Framework 选择 Other / Static；Build Command 留空或 `npm run build`；Output Directory 留空或 `.`。
-4. 部署后会生成一个 `*.vercel.app` 公网链接。
+v1.3：截图录入与简洁交互版。
 
-## GitHub Pages 方式
-1. 新建 GitHub 仓库，把本文件夹里的所有文件上传到仓库根目录。
-2. Settings → Pages → Source 选择 Deploy from a branch。
-3. Branch 选择 main / root。
-4. 保存后等待 Pages 构建完成。
+## 核心功能
+
+- 截图上传：上传彩票截图或票面照片。
+- OCR（Optical Character Recognition，文字识别）：尝试从截图中识别文字，减少手动输入。
+- 待核票草稿：识别结果不会直接入仓，必须人工核对。
+- 数据门禁：正式计算前必须登记官方赔率或彩票截图。
+- EV计算：自动计算保本概率、模型概率、EV。
+- 动态仓位模块：仓位类型可以增删、合并、调整比例。
+- 模型日志：每次规则调整和仓位变化都要记录。
+
+## 公网访问
+
+GitHub Pages（静态网页托管功能）地址：
+
+https://zhaotf1102.github.io/football-is-round/
 
 ## 注意
-- 当前版本是前端静态原型，浏览器端不能稳定抓取外部数据源；v1.3 建议加入 Python 后端爬虫/数据清洗服务。
-- 模型使用前仍应登记可靠数据源，避免垃圾数据污染 EV 计算。
+
+- OCR（文字识别）依赖浏览器加载 CDN（Content Delivery Network，内容分发网络）脚本；如果加载失败，可以使用“快速粘贴”模式。
+- 识别结果必须人工核对，不能直接当出票依据。
+- 当前仍是纯前端静态网页，未来 v1.4 可考虑加入后端数据抓取与清洗。
