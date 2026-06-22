@@ -1,0 +1,11 @@
+{
+  "name": "football-is-round-v1-2",
+  "version": "1.2.1",
+  "private": true,
+  "description": "足球是个圆的 v1.2 - 体彩概率/EV/风控模型网页原型",
+  "scripts": {
+    "start": "python3 -m http.server 5173",
+    "build": "echo 'Static site: no build required'"
+  },
+  "keywords": ["football", "ev", "sporttery", "model", "static-site"]
+}

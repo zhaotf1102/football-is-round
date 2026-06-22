@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>足球是个圆的 v1.2</title>
+<style>
+:root{
+  --bg:#090c10;--bg2:#101720;--card:#151b23;--card2:#1d2530;--line:#30363d;--text:#e6edf3;--muted:#8b949e;
+  --green:#3fb950;--red:#f85149;--yellow:#d29922;--blue:#58a6ff;--purple:#bc8cff;--cyan:#39c5cf;
+  --shadow:0 18px 44px rgba(0,0,0,.34);--radius:18px;
+}
+*{box-sizing:border-box} html{scroll-behavior:smooth}
+body{margin:0;background:radial-gradient(900px 500px at 12% 0%,rgba(88,166,255,.14),transparent),radial-gradient(900px 520px at 100% 15%,rgba(188,140,255,.12),transparent),linear-gradient(160deg,var(--bg),#0b1017 55%,var(--bg2));color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans SC",sans-serif;line-height:1.55}
+header{position:sticky;top:0;z-index:20;background:rgba(9,12,16,.86);backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}
+.wrap{max-width:1320px;margin:0 auto;padding:0 18px}.hero{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:24px 0 10px;flex-wrap:wrap}
+h1{font-size:30px;line-height:1.1;margin:0;letter-spacing:.4px}.subtitle{color:var(--muted);margin-top:7px}.badge{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:rgba(255,255,255,.04);padding:6px 10px;border-radius:999px;font-size:13px;color:#c9d1d9}.badge strong{color:#fff}.gate-badge{border-color:rgba(210,153,34,.4);background:rgba(210,153,34,.08)}
+nav{display:flex;gap:8px;flex-wrap:wrap;padding:10px 0 16px}button,.btn{border:1px solid var(--line);background:var(--card2);color:var(--text);padding:8px 12px;border-radius:11px;cursor:pointer;font:inherit;font-size:14px}button:hover,.btn:hover{border-color:var(--blue)}button.primary{background:linear-gradient(135deg,rgba(88,166,255,.25),rgba(188,140,255,.18));border-color:rgba(88,166,255,.55)}button.danger{border-color:rgba(248,81,73,.55)}button.goodbtn{border-color:rgba(63,185,80,.6)}
+main{padding:20px 0 44px}.section{display:none}.section.active{display:block}.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}.card{grid-column:span 12;background:rgba(21,27,35,.93);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;overflow:auto}.half{grid-column:span 6}.third{grid-column:span 4}.two-third{grid-column:span 8}.quarter{grid-column:span 3}
+h2{font-size:20px;margin:0 0 12px}h3{font-size:16px;margin:16px 0 8px;color:#c9d1d9}.muted{color:var(--muted)}.small{font-size:13px}.tiny{font-size:12px}.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}.green{color:var(--green)}.red{color:var(--red)}.yellow{color:var(--yellow)}.blue{color:var(--blue)}.purple{color:var(--purple)}.cyan{color:var(--cyan)}
+.row{display:grid;grid-template-columns:repeat(12,1fr);gap:10px;align-items:end;margin-bottom:10px}.col-2{grid-column:span 2}.col-3{grid-column:span 3}.col-4{grid-column:span 4}.col-5{grid-column:span 5}.col-6{grid-column:span 6}.col-7{grid-column:span 7}.col-8{grid-column:span 8}.col-9{grid-column:span 9}.col-12{grid-column:span 12}
+label{display:block;color:var(--muted);font-size:12px;margin-bottom:4px}input,select,textarea{width:100%;background:#0d1117;color:var(--text);border:1px solid var(--line);border-radius:11px;padding:9px 10px;font:inherit}textarea{min-height:82px;resize:vertical}.actions{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}.inline{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.inline input{width:auto}.checkrow{display:flex;gap:12px;flex-wrap:wrap}.checkrow label{display:flex;align-items:center;gap:5px;font-size:13px;color:var(--text);margin:0}.checkrow input{width:auto}
+table{width:100%;border-collapse:collapse;margin-top:10px;font-size:13px}th,td{border-bottom:1px solid var(--line);padding:8px 7px;text-align:left;vertical-align:top}th{background:rgba(255,255,255,.035);color:#c9d1d9;position:sticky;top:0;z-index:1}tr:hover td{background:rgba(88,166,255,.045)}
+.pill{display:inline-block;border:1px solid var(--line);background:#0d1117;color:#c9d1d9;border-radius:999px;padding:2px 7px;font-size:12px;margin:1px}.pill.good{border-color:rgba(63,185,80,.45);color:var(--green);background:rgba(63,185,80,.08)}.pill.bad{border-color:rgba(248,81,73,.45);color:var(--red);background:rgba(248,81,73,.08)}.pill.warn{border-color:rgba(210,153,34,.45);color:var(--yellow);background:rgba(210,153,34,.08)}
+.statgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.stat{background:rgba(255,255,255,.035);border:1px solid var(--line);border-radius:14px;padding:12px}.stat b{font-size:21px}.box{border:1px solid var(--line);background:rgba(255,255,255,.035);border-radius:14px;padding:12px}.okbox{border-color:rgba(63,185,80,.35);background:rgba(63,185,80,.08)}.warnbox{border-color:rgba(210,153,34,.35);background:rgba(210,153,34,.08)}.badbox{border-color:rgba(248,81,73,.35);background:rgba(248,81,73,.08)}
+.progress{height:9px;background:#0d1117;border:1px solid var(--line);border-radius:99px;overflow:hidden;margin-top:6px}.bar{height:100%;background:linear-gradient(90deg,var(--blue),var(--purple));width:0%}.toast{position:fixed;right:18px;bottom:18px;background:var(--card2);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:10px 14px;display:none;z-index:60}.kbd{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;border:1px solid var(--line);border-bottom-color:#111;background:#0d1117;border-radius:6px;padding:1px 5px}.locked{filter:saturate(.6);opacity:.62}.divider{height:1px;background:var(--line);margin:14px 0}
+@media(max-width:980px){.half,.third,.two-third,.quarter{grid-column:span 12}.statgrid{grid-template-columns:repeat(2,1fr)}.row{grid-template-columns:repeat(6,1fr)}.col-2,.col-3,.col-4,.col-5,.col-6,.col-7,.col-8,.col-9{grid-column:span 6}header{position:static}}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="hero">
+      <div>
+        <h1>⚽ 足球是个圆的 <span class="badge"><strong>v1.2</strong> 试用版</span></h1>
+        <div class="subtitle">体彩概率 / 可靠数据门禁 / EV筛选 / 动态仓位 / 票仓组合 / 版本日志 / 赛后复盘</div>
+      </div>
+      <div class="badge gate-badge" id="gateBadge">数据门禁：未检查</div>
+    </div>
+    <nav>
+      <button data-tab="dashboard">总览</button>
+      <button data-tab="gate">数据门禁</button>
+      <button data-tab="matches">比赛概率</button>
+      <button data-tab="candidates">EV候选池</button>
+      <button data-tab="modules">动态仓位</button>
+      <button data-tab="tickets">票仓生成</button>
+      <button data-tab="simulator">剧本计算</button>
+      <button data-tab="logs">模型日志</button>
+      <button data-tab="review">赛后复盘</button>
+      <button data-tab="settings">导入导出</button>
+    </nav>
+  </div>
+</header>
+<main class="wrap">
+  <section id="dashboard" class="section active">
+    <div class="grid">
+      <div class="card">
+        <h2>系统总览</h2>
+        <div class="statgrid">
+          <div class="stat"><div class="muted small">预算</div><b id="dashBudget">-</b></div>
+          <div class="stat"><div class="muted small">已建票成本</div><b id="dashCost">-</b></div>
+          <div class="stat"><div class="muted small">组合期望返奖</div><b id="dashER">-</b></div>
+          <div class="stat"><div class="muted small">组合EV</div><b id="dashEV">-</b></div>
+        </div>
+      </div>
+      <div class="card half">
+        <h2>v1.2 新增</h2>
+        <div class="box okbox">
+          <p><b>新增“可靠数据门禁”：</b>模型使用前必须记录数据源、可靠性、更新时间、赔率来源。门禁不过，候选池和票仓会显示风险警告。</p>
+          <p><b>新增剧本计算器：</b>输入赛果，自动计算所有票的理论命中奖金，方便赛前预期盈亏和赛中推演。</p>
+          <p><b>新增动态仓位模块：</b>仓位类型可增删、合并、改比例，但所有变更必须写日志。</p>
+        </div>
+      </div>
+      <div class="card half">
+        <h2>风险警报</h2>
+        <div id="warnings"></div>
+      </div>
+      <div class="card two-third">
+        <h2>仓位模块占比</h2>
+        <div id="moduleBars"></div>
+      </div>
+      <div class="card third">
+        <h2>一键试用</h2>
+        <p class="muted small">可以先加载我们当前这套 250 元样例，试试看 EV、票仓、剧本计算器怎么跑。</p>
+        <div class="actions">
+          <button class="primary" onclick="loadSample()">加载当前250元样例</button>
+          <button onclick="clearProject()" class="danger">清空项目</button>
+        </div>
+        <p class="tiny muted">样例只是为了测试程序结构，不代表推荐继续补票。</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="gate" class="section">
+    <div class="grid">
+      <div class="card two-third">
+        <h2>可靠数据门禁</h2>
+        <div id="gateStatus" class="box warnbox"></div>
+        <div class="divider"></div>
+        <div class="row">
+          <div class="col-3"><label>数据源类型</label><select id="srcType"><option>官方赔率</option><option>权威赛程/赛果</option><option>权威新闻</option><option>球队/赛事官方</option><option>专业数据站</option><option>用户观察</option><option>低可信来源</option></select></div>
+          <div class="col-3"><label>来源名称</label><input id="srcName" placeholder="例：体彩截图 / FIFA / Reuters" /></div>
+          <div class="col-3"><label>更新时间</label><input id="srcTime" type="datetime-local" /></div>
+          <div class="col-3"><label>可靠性评分 0-100</label><input id="srcScore" type="number" min="0" max="100" value="80" /></div>
+          <div class="col-8"><label>链接/截图/说明</label><input id="srcRef" placeholder="粘贴URL、截图文件名、来源备注" /></div>
+          <div class="col-4"><label>状态</label><select id="srcStatus"><option>已核验</option><option>待二次核验</option><option>疑似过期</option><option>剔除</option></select></div>
+          <div class="col-12"><label>摘要</label><textarea id="srcNote" placeholder="记录赔率、伤停、阵容、赛程、天气、用户肉眼观察等关键事实。"></textarea></div>
+        </div>
+        <div class="actions"><button class="primary" onclick="addSource()">添加数据源</button><button onclick="auditGate()">重新检查门禁</button><button onclick="forceUnlock()">临时强制解锁</button></div>
+        <table><thead><tr><th>ID</th><th>类型</th><th>来源</th><th>可靠性</th><th>时间</th><th>状态</th><th>摘要</th><th>操作</th></tr></thead><tbody id="sourceTable"></tbody></table>
+      </div>
+      <div class="card third">
+        <h2>门禁规则 v1.2</h2>
+        <div class="box">
+          <p><span class="pill good">硬规则</span> 至少 1 个官方赔率/票面数据源。</p>
+          <p><span class="pill good">硬规则</span> 至少 1 个赛程/新闻/阵容类来源。</p>
+          <p><span class="pill warn">警告</span> 平均可靠性低于 70，禁止当作正式模型。</p>
+          <p><span class="pill warn">警告</span> 数据超过 24 小时未更新，标记为可能过期。</p>
+          <p><span class="pill bad">剔除</span> 低可信来源不能直接进入概率层，只能写入观察备注。</p>
+        </div>
+        <h3>爬取接口预留</h3>
+        <p class="muted small">静态网页受浏览器跨域和反爬限制，v1.2 先做“数据门禁”和“手动核验录入”。v1.3 可以接 Python 后端做自动爬取、清洗、打分。</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="matches" class="section">
+    <div class="grid">
+      <div class="card">
+        <h2>比赛与概率层</h2>
+        <div class="row">
+          <div class="col-2"><label>场次</label><input id="mCode" placeholder="周一041" /></div>
+          <div class="col-3"><label>主队</label><input id="mHome" /></div>
+          <div class="col-3"><label>客队</label><input id="mAway" /></div>
+          <div class="col-2"><label>主队λ</label><input id="mLamH" type="number" step="0.01" value="1.60" /></div>
+          <div class="col-2"><label>客队λ</label><input id="mLamA" type="number" step="0.01" value="0.90" /></div>
+          <div class="col-12"><label>建模备注</label><input id="mNote" placeholder="例：强队轮换、让球过深、弱队反击、天气、战意" /></div>
+        </div>
+        <div class="actions"><button class="primary" onclick="addMatch()">添加比赛</button><button onclick="generateCandidatesFromPoisson()">从λ自动生成基础候选</button></div>
+        <table><thead><tr><th>ID</th><th>场次</th><th>对阵</th><th>λ</th><th>胜平负概率</th><th>总进球分布</th><th>备注</th><th>操作</th></tr></thead><tbody id="matchTable"></tbody></table>
+      </div>
+    </div>
+  </section>
+
+  <section id="candidates" class="section">
+    <div class="grid">
+      <div class="card">
+        <h2>EV候选池</h2>
+        <div id="evGateHint" class="box warnbox"></div>
+        <div class="row">
+          <div class="col-2"><label>比赛ID</label><input id="cMatch" placeholder="M1" /></div>
+          <div class="col-2"><label>市场/玩法</label><select id="cMarket"><option>胜平负</option><option>让球胜平负</option><option>总进球</option><option>比分</option><option>半全场</option><option>自定义</option></select></div>
+          <div class="col-3"><label>选项</label><input id="cSel" placeholder="胜 / 让负 / 3球 / 2:1" /></div>
+          <div class="col-2"><label>赔率</label><input id="cOdds" type="number" step="0.01" /></div>
+          <div class="col-2"><label>模型概率%</label><input id="cProb" type="number" step="0.1" /></div>
+          <div class="col-1"><label>仓位</label><select id="cModule"></select></div>
+          <div class="col-12"><label>入池理由</label><input id="cReason" placeholder="为什么认为真实概率高于/接近保本概率？" /></div>
+        </div>
+        <div class="actions"><button class="primary" onclick="addCandidate()">添加候选</button><button onclick="sortCandidatesByEV()">按EV排序</button><button onclick="removeNegativeCandidates()">隐藏明显负EV</button></div>
+        <table><thead><tr><th>ID</th><th>比赛</th><th>玩法</th><th>选项</th><th>赔率</th><th>保本概率</th><th>模型概率</th><th>EV</th><th>评级</th><th>仓位</th><th>理由</th><th>操作</th></tr></thead><tbody id="candidateTable"></tbody></table>
+      </div>
+    </div>
+  </section>
+
+  <section id="modules" class="section">
+    <div class="grid">
+      <div class="card two-third">
+        <h2>动态仓位模块</h2>
+        <div class="row">
+          <div class="col-3"><label>模块名</label><input id="modName" placeholder="例：主路径仓" /></div>
+          <div class="col-2"><label>目标占比%</label><input id="modShare" type="number" step="0.1" /></div>
+          <div class="col-3"><label>功能</label><select id="modFunc"><option>主路径</option><option>偏差路径</option><option>收益放大</option><option>深尾风险</option><option>观察实验</option><option>正EV重点</option></select></div>
+          <div class="col-4"><label>约束/备注</label><input id="modRule" /></div>
+        </div>
+        <div class="actions"><button class="primary" onclick="addModule()">新增模块</button><button onclick="normalizeModules()">归一化到100%</button></div>
+        <table><thead><tr><th>ID</th><th>模块名</th><th>目标占比</th><th>功能</th><th>当前成本</th><th>当前占比</th><th>备注</th><th>操作</th></tr></thead><tbody id="moduleTable"></tbody></table>
+      </div>
+      <div class="card third">
+        <h2>结构原则</h2>
+        <div class="box okbox"><b>原则硬，结构软。</b><br>EV、日志、数据门禁、复盘是硬规则；仓位类型是动态模块，可以增删、拆分、合并。</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="tickets" class="section">
+    <div class="grid">
+      <div class="card two-third">
+        <h2>票仓生成器</h2>
+        <p class="muted small">每一行是一个“腿组”，同一行里候选ID用逗号分隔表示同场/同组备选；不同行之间可串。例：<span class="kbd">C1,C2</span> 换行 <span class="kbd">C5</span> 换行 <span class="kbd">C8,C9</span>。</p>
+        <div class="row">
+          <div class="col-3"><label>票名</label><input id="tName" placeholder="主仓A" /></div>
+          <div class="col-2"><label>倍数</label><input id="tMulti" type="number" min="1" value="1" /></div>
+          <div class="col-3"><label>所属模块</label><select id="tModule"></select></div>
+          <div class="col-4"><label>过关方式</label><div class="checkrow"><label><input type="checkbox" class="pass" value="1">单关</label><label><input type="checkbox" class="pass" value="2" checked>2关</label><label><input type="checkbox" class="pass" value="3">3关</label><label><input type="checkbox" class="pass" value="4">4关</label></div></div>
+          <div class="col-12"><label>腿组</label><textarea id="tLegs" placeholder="C1,C2&#10;C5&#10;C8,C9"></textarea></div>
+          <div class="col-12"><label>票面备注</label><input id="tNote" placeholder="这张票的功能、预期接管什么剧本" /></div>
+        </div>
+        <div class="actions"><button class="primary" onclick="addTicket()">生成票</button><button onclick="detectDuplicates()">重复/相关性检测</button></div>
+        <table><thead><tr><th>ID</th><th>票名</th><th>模块</th><th>过关</th><th>注数</th><th>成本</th><th>期望返奖</th><th>EV</th><th>腿组</th><th>备注</th><th>操作</th></tr></thead><tbody id="ticketTable"></tbody></table>
+      </div>
+      <div class="card third">
+        <h2>组合检测</h2>
+        <div id="dupBox" class="box"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="simulator" class="section">
+    <div class="grid">
+      <div class="card two-third">
+        <h2>剧本/赛果计算器</h2>
+        <p class="muted small">输入各比赛实际选项/比分，程序会判断候选命中，并计算每张票理论回奖。适合赛前推演，也适合赛中看存活结构。</p>
+        <div id="scenarioInputs"></div>
+        <div class="actions"><button class="primary" onclick="runScenario()">计算该剧本回奖</button><button onclick="fillScenarioFromFavorites()">填入热门示例</button></div>
+        <table><thead><tr><th>票</th><th>是否命中</th><th>理论回奖</th><th>说明</th></tr></thead><tbody id="scenarioTable"></tbody></table>
+      </div>
+      <div class="card third">
+        <h2>剧本汇总</h2>
+        <div class="stat"><div class="muted small">理论返奖</div><b id="scReturn">-</b></div><br>
+        <div class="stat"><div class="muted small">净盈亏</div><b id="scProfit">-</b></div><br>
+        <div class="stat"><div class="muted small">ROI</div><b id="scROI">-</b></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="logs" class="section">
+    <div class="grid">
+      <div class="card two-third">
+        <h2>模型版本日志</h2>
+        <div class="row">
+          <div class="col-2"><label>版本</label><input id="logVer" value="v1.2" /></div>
+          <div class="col-3"><label>类型</label><select id="logType"><option>结构调整</option><option>EV规则</option><option>数据门禁</option><option>仓位变化</option><option>赛前判断</option><option>赛后复盘</option><option>Bug/程序</option></select></div>
+          <div class="col-3"><label>标题</label><input id="logTitle" /></div>
+          <div class="col-4"><label>验证目标</label><input id="logGoal" /></div>
+          <div class="col-12"><label>内容</label><textarea id="logBody" placeholder="为什么改、改了什么、预期影响、后续怎么验证。"></textarea></div>
+        </div>
+        <div class="actions"><button class="primary" onclick="addLog()">写入日志</button><button onclick="addAutoSnapshotLog()">生成当前快照日志</button></div>
+        <table><thead><tr><th>时间</th><th>版本</th><th>类型</th><th>标题</th><th>验证目标</th><th>内容</th><th>操作</th></tr></thead><tbody id="logTable"></tbody></table>
+      </div>
+      <div class="card third">
+        <h2>v1.2内置日志</h2>
+        <div class="box"><b>v1.2：数据门禁 + 剧本计算器</b><br><span class="muted small">新增可靠数据源检查，正式模型必须先通过数据门禁；新增剧本回奖计算，用于预期盈亏推演和赛中影响分析。</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="review" class="section">
+    <div class="grid">
+      <div class="card two-third">
+        <h2>赛后复盘</h2>
+        <div class="row">
+          <div class="col-3"><label>实际成本</label><input id="rvCost" type="number" step="0.01" /></div>
+          <div class="col-3"><label>实际回奖</label><input id="rvReturn" type="number" step="0.01" /></div>
+          <div class="col-3"><label>结果标签</label><select id="rvTag"><option>判断正确收益不足</option><option>概率判断错误</option><option>赔率价值判断错误</option><option>仓位结构错误</option><option>黑天鹅覆盖不足</option><option>执行/票面错误</option><option>样本正常波动</option></select></div>
+          <div class="col-3"><label>是否保留规则</label><select id="rvKeep"><option>保留</option><option>修改</option><option>删除</option><option>继续观察</option></select></div>
+          <div class="col-12"><label>复盘结论</label><textarea id="rvBody"></textarea></div>
+        </div>
+        <div class="actions"><button class="primary" onclick="addReview()">写入复盘日志</button></div>
+      </div>
+      <div class="card third">
+        <h2>复盘指标</h2>
+        <div id="reviewStats" class="box"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="settings" class="section">
+    <div class="grid">
+      <div class="card half">
+        <h2>项目设置</h2>
+        <div class="row">
+          <div class="col-6"><label>项目名</label><input id="setName" /></div>
+          <div class="col-3"><label>版本</label><input id="setVer" /></div>
+          <div class="col-3"><label>预算</label><input id="setBudget" type="number" step="0.01" /></div>
+          <div class="col-12"><label>项目原则</label><textarea id="setPrinciples"></textarea></div>
+        </div>
+        <div class="actions"><button class="primary" onclick="saveSettings()">保存设置</button><button onclick="exportJSON()">导出JSON</button><button onclick="exportCSV()">导出CSV</button><button onclick="window.print()">打印报告</button></div>
+      </div>
+      <div class="card half">
+        <h2>导入 / 备份</h2>
+        <textarea id="importBox" placeholder="粘贴导出的JSON"></textarea>
+        <div class="actions"><button onclick="importJSON()">导入JSON</button><button class="danger" onclick="clearProject()">清空本地数据</button></div>
+        <p class="muted small">数据保存在浏览器 localStorage。换设备前请先导出JSON。</p>
+      </div>
+    </div>
+  </section>
+</main>
+<div class="toast" id="toast"></div>
+<script>
+const KEY='football_is_round_v12';
+let state = load() || initState();
+function initState(){return {
+  settings:{name:'足球是个圆的', version:'v1.2', budget:250, principles:'先数据，后概率；先EV，后仓位；原则硬，结构软；每次调整必须记录日志。'},
+  gate:{locked:true, forced:false, lastAudit:null},
+  sources:[], matches:[], candidates:[], modules:[
+    {id:'MOD1',name:'主路径仓',share:36,func:'主路径',rule:'稳定主线，但必须过EV筛选'},
+    {id:'MOD2',name:'第二路径仓',share:26,func:'偏差路径',rule:'接主仓走偏，不是安慰票'},
+    {id:'MOD3',name:'收益放大仓',share:26,func:'收益放大',rule:'判断正确时抬回报'},
+    {id:'MOD4',name:'深尾/梦尾仓',share:12,func:'深尾风险',rule:'低概率但有逻辑，严控成本'}],
+  tickets:[], logs:[{time:new Date().toISOString(),version:'v1.2',type:'程序',title:'创建v1.2试用版',goal:'把模型开发从聊天原型推进到可试用工具',body:'新增可靠数据门禁、动态仓位、EV候选池、票仓生成器、剧本回奖计算器、日志与复盘模块。'}], reviews:[]
+}}
+function save(){localStorage.setItem(KEY,JSON.stringify(state)); renderAll();}
+function load(){try{return JSON.parse(localStorage.getItem(KEY))}catch(e){return null}}
+function showToast(msg){let t=document.getElementById('toast');t.textContent=msg;t.style.display='block';setTimeout(()=>t.style.display='none',1800)}
+function fmt(n,d=2){if(!isFinite(n))return '-';return Number(n).toFixed(d)}
+function pct(n,d=1){if(!isFinite(n))return '-';return (n*100).toFixed(d)+'%'}
+function uid(prefix, arr){let max=0; (arr||[]).forEach(x=>{let m=String(x.id||'').match(/(\d+)/); if(m)max=Math.max(max,+m[1])}); return prefix+(max+1)}
+function poisson(k,lam){let r=Math.exp(-lam);for(let i=1;i<=k;i++)r*=lam/i;return r}
+function matchById(id){return state.matches.find(m=>m.id===id)}
+function candById(id){return state.candidates.find(c=>c.id===id)}
+function modById(id){return state.modules.find(m=>m.id===id)}
+function gateOK(){return !state.gate.locked || state.gate.forced}
+function implied(odds){return odds>0?1/odds:0}
+function ev(prob,odds){return prob*odds-1}
+function evClass(x){if(x>=0.08)return ['强正EV','good']; if(x>=0.02)return ['正EV','good']; if(x>=-0.03)return ['近中性','warn']; return ['负EV','bad']}
+function comb(arr,k){let out=[];function rec(start,cur){if(cur.length===k){out.push(cur.slice());return}for(let i=start;i<arr.length;i++){cur.push(arr[i]);rec(i+1,cur);cur.pop()}}rec(0,[]);return out}
+function product(a){return a.reduce((x,y)=>x*y,1)}
+function parsePasses(){return [...document.querySelectorAll('.pass:checked')].map(x=>+x.value)}
+
+function auditGate(){
+  const active=state.sources.filter(s=>s.status!=='剔除');
+  const official=active.some(s=>s.type==='官方赔率' && s.score>=70 && s.status==='已核验');
+  const info=active.some(s=>['权威赛程/赛果','权威新闻','球队/赛事官方','专业数据站'].includes(s.type) && s.score>=70 && s.status!=='疑似过期');
+  const avg=active.length?active.reduce((a,s)=>a+(+s.score||0),0)/active.length:0;
+  const stale=active.some(s=>{ if(!s.time)return true; return (Date.now()-new Date(s.time).getTime())>24*3600*1000; });
+  state.gate.lastAudit=new Date().toISOString();
+  state.gate.locked=!(official && info && avg>=70 && !stale);
+  save(); showToast(state.gate.locked?'门禁未通过':'门禁通过');
+}
+function forceUnlock(){state.gate.forced=true; state.gate.locked=false; state.logs.unshift({time:new Date().toISOString(),version:state.settings.version,type:'数据门禁',title:'临时强制解锁',goal:'允许试算，但正式复盘需补齐数据源',body:'用户强制解锁数据门禁。此状态下EV计算仅作试算，不作为正式模型结论。'}); save();}
+function addSource(){
+  let s={id:uid('S',state.sources),type:v('srcType'),name:v('srcName'),time:v('srcTime'),score:+v('srcScore'),ref:v('srcRef'),status:v('srcStatus'),note:v('srcNote')};
+  if(!s.name)return showToast('来源名不能为空'); state.sources.unshift(s); auditGate(); clearInputs(['srcName','srcRef','srcNote']);
+}
+function delSource(id){state.sources=state.sources.filter(x=>x.id!==id); auditGate();}
+
+function calcMatchProbs(m){
+  let max=7, home=[],away=[]; for(let i=0;i<=max;i++){home[i]=poisson(i,m.lh);away[i]=poisson(i,m.la)};
+  let pH=0,pD=0,pA=0,tot=Array(8).fill(0),score={};
+  for(let h=0;h<=max;h++)for(let a=0;a<=max;a++){let p=home[h]*away[a]; if(h>a)pH+=p; else if(h===a)pD+=p; else pA+=p; let t=Math.min(h+a,7); tot[t]+=p; if(h<=5&&a<=5)score[`${h}:${a}`]=p;}
+  let norm=pH+pD+pA; return {pH:pH/norm,pD:pD/norm,pA:pA/norm,tot,score};
+}
+function addMatch(){
+  let m={id:uid('M',state.matches),code:v('mCode'),home:v('mHome'),away:v('mAway'),lh:+v('mLamH'),la:+v('mLamA'),note:v('mNote')};
+  if(!m.home||!m.away)return showToast('球队名不能为空'); state.matches.push(m); save(); clearInputs(['mCode','mHome','mAway','mNote']);
+}
+function delMatch(id){state.matches=state.matches.filter(x=>x.id!==id); state.candidates=state.candidates.filter(c=>c.matchId!==id); save();}
+function generateCandidatesFromPoisson(){
+  let added=0;
+  state.matches.forEach(m=>{
+    const p=calcMatchProbs(m);
+    [['胜平负','胜',p.pH],['胜平负','平',p.pD],['胜平负','负',p.pA]].forEach(x=>{
+      state.candidates.push({id:uid('C',state.candidates),matchId:m.id,market:x[0],selection:x[1],odds:0,prob:x[2],moduleId:'MOD1',reason:'λ模型自动生成，需手动补赔率'}); added++;
+    });
+    for(let t=0;t<=7;t++){state.candidates.push({id:uid('C',state.candidates),matchId:m.id,market:'总进球',selection:String(t===7?'7+':t),odds:0,prob:p.tot[t],moduleId:'MOD3',reason:'λ模型自动生成，需手动补赔率'});added++;}
+  });
+  save(); showToast(`已生成 ${added} 个候选`);
+}
+
+function addCandidate(){
+  let c={id:uid('C',state.candidates),matchId:v('cMatch'),market:v('cMarket'),selection:v('cSel'),odds:+v('cOdds'),prob:+v('cProb')/100,moduleId:v('cModule'),reason:v('cReason')};
+  if(!c.matchId||!c.selection||!c.odds)return showToast('候选信息不完整'); state.candidates.push(c); save(); clearInputs(['cMatch','cSel','cOdds','cProb','cReason']);
+}
+function delCandidate(id){state.candidates=state.candidates.filter(x=>x.id!==id); save();}
+function sortCandidatesByEV(){state.candidates.sort((a,b)=>ev(b.prob,b.odds)-ev(a.prob,a.odds)); save();}
+function removeNegativeCandidates(){state.candidates=state.candidates.filter(c=>ev(c.prob,c.odds)>-0.03); save();}
+
+function addModule(){
+  let m={id:uid('MOD',state.modules),name:v('modName'),share:+v('modShare'),func:v('modFunc'),rule:v('modRule')};
+  if(!m.name)return showToast('模块名不能为空'); state.modules.push(m); state.logs.unshift({time:new Date().toISOString(),version:state.settings.version,type:'仓位变化',title:'新增仓位模块：'+m.name,goal:'验证动态模块是否改善模型表达',body:`功能：${m.func}；目标占比：${m.share}%；备注：${m.rule}`}); save(); clearInputs(['modName','modShare','modRule']);
+}
+function delModule(id){if(state.modules.length<=1)return showToast('至少保留一个模块'); state.modules=state.modules.filter(m=>m.id!==id); state.candidates.forEach(c=>{if(c.moduleId===id)c.moduleId=state.modules[0].id}); state.tickets.forEach(t=>{if(t.moduleId===id)t.moduleId=state.modules[0].id}); save();}
+function normalizeModules(){let sum=state.modules.reduce((a,m)=>a+(+m.share||0),0)||1; state.modules.forEach(m=>m.share=+(m.share/sum*100).toFixed(1)); save();}
+
+function ticketMetrics(t){
+  let groups=t.legs.map(line=>line.split(',').map(x=>x.trim()).filter(Boolean).map(candById).filter(Boolean)).filter(g=>g.length);
+  let passes=t.passes||[2], multi=+t.multi||1; let units=0, er=0;
+  passes.forEach(k=>{
+    if(k<1||k>groups.length)return;
+    comb(groups,k).forEach(set=>{
+      let count=product(set.map(g=>g.length)); units+=count;
+      let legValues=set.map(g=>g.reduce((s,c)=>s+(+c.prob||0)*(+c.odds||0),0));
+      er += 2*multi*product(legValues);
+    });
+  });
+  let cost=2*multi*units; return {groups,units,cost,er,ev:cost?er/cost-1:0};
+}
+function addTicket(){
+  let passes=parsePasses(); if(!passes.length)return showToast('至少选一个过关方式');
+  let legs=v('tLegs').split('\n').map(x=>x.trim()).filter(Boolean); if(!legs.length)return showToast('腿组不能为空');
+  let t={id:uid('T',state.tickets),name:v('tName')||uid('票',state.tickets),multi:+v('tMulti')||1,moduleId:v('tModule'),passes,legs,note:v('tNote')};
+  state.tickets.push(t); save(); clearInputs(['tName','tLegs','tNote']);
+}
+function delTicket(id){state.tickets=state.tickets.filter(x=>x.id!==id); save();}
+function detectDuplicates(){renderDupBox(true)}
+
+function scenarioHit(c, val){
+  if(!val)return false;
+  let parts=val.split('|'); // score|spf|tot|custom
+  const score=parts[0]||'', spf=parts[1]||'', tot=parts[2]||'', custom=parts[3]||'';
+  if(c.market==='比分') return c.selection===score;
+  if(c.market==='胜平负') return c.selection===spf;
+  if(c.market==='总进球') return c.selection===tot || (c.selection==='7+' && +tot>=7);
+  return [score,spf,tot,custom].includes(c.selection);
+}
+function runScenario(){
+  let vals={}; state.matches.forEach(m=>{vals[m.id]=v('sc_'+m.id)});
+  let total=0, rows='';
+  state.tickets.forEach(t=>{
+    let metrics=ticketMetrics(t), ret=0, hitCount=0, detail=[];
+    let groups=metrics.groups;
+    (t.passes||[]).forEach(k=>{
+      if(k>groups.length)return;
+      comb(groups,k).forEach(set=>{
+        // expand alternatives
+        let combos=[[]];
+        set.forEach(g=>{let next=[]; combos.forEach(prefix=>g.forEach(c=>next.push(prefix.concat(c)))); combos=next;});
+        combos.forEach(cs=>{
+          let ok=cs.every(c=>scenarioHit(c, vals[c.matchId]));
+          if(ok){hitCount++; ret += 2*(+t.multi||1)*product(cs.map(c=>+c.odds||0)); detail.push(cs.map(c=>c.id+':'+c.selection).join(' × '));}
+        })
+      })
+    });
+    total+=ret; rows+=`<tr><td>${t.id} ${esc(t.name)}</td><td>${hitCount?'✅ 命中':'—'}</td><td>${fmt(ret)}</td><td class="small muted">${detail.slice(0,4).join('<br>')}${detail.length>4?'<br>…':''}</td></tr>`;
+  });
+  document.getElementById('scenarioTable').innerHTML=rows||'<tr><td colspan="4" class="muted">暂无票仓</td></tr>';
+  let cost=portfolio().cost; document.getElementById('scReturn').textContent=fmt(total); document.getElementById('scProfit').textContent=fmt(total-cost); document.getElementById('scROI').textContent=cost?pct((total-cost)/cost):'-';
+}
+function fillScenarioFromFavorites(){
+  state.matches.forEach(m=>{let p=calcMatchProbs(m), bestScore=Object.entries(p.score).sort((a,b)=>b[1]-a[1])[0]?.[0]||'1:0'; let [h,a]=bestScore.split(':').map(Number); let spf=h>a?'胜':h===a?'平':'负'; let tot=String(Math.min(h+a,7)); let el=document.getElementById('sc_'+m.id); if(el)el.value=`${bestScore}|${spf}|${tot}|`;}); runScenario();
+}
+
+function addLog(){state.logs.unshift({time:new Date().toISOString(),version:v('logVer'),type:v('logType'),title:v('logTitle'),goal:v('logGoal'),body:v('logBody')}); save(); clearInputs(['logTitle','logGoal','logBody']);}
+function addAutoSnapshotLog(){let p=portfolio(); state.logs.unshift({time:new Date().toISOString(),version:state.settings.version,type:'结构调整',title:'当前模型快照',goal:'记录一次可复盘状态',body:`数据源${state.sources.length}个；比赛${state.matches.length}场；候选${state.candidates.length}个；票${state.tickets.length}张；成本${fmt(p.cost)}；期望返奖${fmt(p.er)}；组合EV ${pct(p.ev)}。`}); save();}
+function delLog(i){state.logs.splice(i,1);save();}
+function addReview(){let cost=+v('rvCost'), ret=+v('rvReturn'); state.reviews.unshift({time:new Date().toISOString(),cost,ret,tag:v('rvTag'),keep:v('rvKeep'),body:v('rvBody')}); state.logs.unshift({time:new Date().toISOString(),version:state.settings.version,type:'赛后复盘',title:v('rvTag'),goal:'校准模型',body:`成本${cost}，回奖${ret}，ROI ${cost?pct((ret-cost)/cost):'-'}。处理：${v('rvKeep')}。结论：${v('rvBody')}`}); save();}
+function saveSettings(){state.settings={name:v('setName'),version:v('setVer'),budget:+v('setBudget'),principles:v('setPrinciples')}; save();}
+function exportJSON(){download('football_is_round_v1_2_project.json', JSON.stringify(state,null,2),'application/json')}
+function exportCSV(){
+  let lines=['type,id,field1,field2,field3,field4,ev'];
+  state.candidates.forEach(c=>lines.push(['candidate',c.id,c.matchId,c.market,c.selection,c.odds,ev(c.prob,c.odds)].map(csv).join(',')));
+  state.tickets.forEach(t=>{let m=ticketMetrics(t);lines.push(['ticket',t.id,t.name,m.cost,m.er,m.ev,t.legs.join('|')].map(csv).join(','))});
+  state.logs.forEach(l=>lines.push(['log','',l.time,l.version,l.type,l.title,l.body].map(csv).join(',')));
+  download('football_is_round_v1_2_export.csv', lines.join('\n'),'text/csv;charset=utf-8')
+}
+function importJSON(){try{state=JSON.parse(v('importBox')); save(); showToast('导入成功')}catch(e){showToast('JSON格式错误')}}
+function clearProject(){if(confirm('确定清空本地项目？')){state=initState(); save();}}
+function download(name,text,type){let blob=new Blob([text],{type});let a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();URL.revokeObjectURL(a.href)}
+function csv(x){return '"'+String(x??'').replace(/"/g,'""')+'"'}
+function v(id){return document.getElementById(id)?.value?.trim()||''}
+function setv(id,val){let el=document.getElementById(id); if(el)el.value=val??''}
+function clearInputs(ids){ids.forEach(id=>setv(id,''))}
+function esc(s){return String(s??'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]))}
+
+function portfolio(){let cost=0,er=0; state.tickets.forEach(t=>{let m=ticketMetrics(t); cost+=m.cost; er+=m.er}); return {cost,er,ev:cost?er/cost-1:0}}
+function moduleCost(id){return state.tickets.filter(t=>t.moduleId===id).reduce((a,t)=>a+ticketMetrics(t).cost,0)}
+function moduleER(id){return state.tickets.filter(t=>t.moduleId===id).reduce((a,t)=>a+ticketMetrics(t).er,0)}
+function renderAll(){renderGate();renderMatches();renderCandidates();renderModules();renderTickets();renderDashboard();renderLogs();renderSettings();renderScenarioInputs();renderReview();}
+function renderDashboard(){
+  let p=portfolio(); document.getElementById('dashBudget').textContent=fmt(state.settings.budget,0); document.getElementById('dashCost').textContent=fmt(p.cost); document.getElementById('dashER').textContent=fmt(p.er); document.getElementById('dashEV').innerHTML=`<span class="${p.ev>=0?'green':'red'}">${pct(p.ev)}</span>`;
+  document.getElementById('moduleBars').innerHTML=state.modules.map(m=>{let c=moduleCost(m.id), share=p.cost?c/p.cost*100:0; return `<div style="margin-bottom:12px"><div class="inline"><b>${esc(m.name)}</b><span class="pill">目标${fmt(m.share,1)}%</span><span class="pill">实际${fmt(share,1)}%</span><span class="muted small">成本 ${fmt(c)}</span></div><div class="progress"><div class="bar" style="width:${Math.min(share,100)}%"></div></div></div>`}).join('')||'<p class="muted">暂无模块</p>';
+  let warns=[]; if(state.gate.locked&&!state.gate.forced)warns.push(['bad','数据门禁未通过：候选和票仓只能试算，不建议正式使用。']); if(p.cost>state.settings.budget)warns.push(['bad',`成本 ${fmt(p.cost)} 超过预算 ${fmt(state.settings.budget)}`]); if(state.candidates.some(c=>ev(c.prob,c.odds)<-0.08))warns.push(['warn','候选池存在明显负EV选项，注意不要把“覆盖安全感”误当价值。']); let negTickets=state.tickets.filter(t=>ticketMetrics(t).ev<-.15); if(negTickets.length)warns.push(['warn',`${negTickets.length} 张票模型EV低于 -15%，建议复查其功能。`]);
+  document.getElementById('warnings').innerHTML=warns.map(w=>`<div class="box ${w[0]}box">${w[1]}</div>`).join('<br>')||'<div class="box okbox">暂无明显结构警报。</div>';
+}
+function renderGate(){
+  const active=state.sources.filter(s=>s.status!=='剔除'), avg=active.length?active.reduce((a,s)=>a+(+s.score||0),0)/active.length:0;
+  const badge=document.getElementById('gateBadge'); if(badge){badge.textContent=state.gate.locked&&!state.gate.forced?'数据门禁：未通过':state.gate.forced?'数据门禁：强制解锁':'数据门禁：通过'; badge.className='badge '+((state.gate.locked&&!state.gate.forced)?'gate-badge':'');}
+  let html=state.gate.locked&&!state.gate.forced?`<b class="yellow">门禁未通过。</b><br>请补齐官方赔率/票面来源、权威赛前信息，并保证来源平均可靠性≥70且不过期。`:`<b class="green">门禁可用。</b><br>${state.gate.forced?'当前为强制解锁，正式使用前仍建议补齐来源。':'可以进入EV候选池和票仓计算。'}`;
+  let gs=document.getElementById('gateStatus'); if(gs)gs.innerHTML=html+`<br><span class="muted small">有效来源 ${active.length} 个，平均可靠性 ${fmt(avg,1)}，上次检查 ${state.gate.lastAudit?new Date(state.gate.lastAudit).toLocaleString():'未检查'}</span>`;
+  let et=document.getElementById('sourceTable'); if(et)et.innerHTML=state.sources.map(s=>`<tr><td>${s.id}</td><td>${esc(s.type)}</td><td>${esc(s.name)}<br><span class="muted tiny">${esc(s.ref)}</span></td><td>${s.score}</td><td>${s.time?new Date(s.time).toLocaleString():''}</td><td>${esc(s.status)}</td><td class="small">${esc(s.note)}</td><td><button class="danger" onclick="delSource('${s.id}')">删</button></td></tr>`).join('')||'<tr><td colspan="8" class="muted">暂无数据源</td></tr>';
+  let hint=document.getElementById('evGateHint'); if(hint)hint.innerHTML=state.gate.locked&&!state.gate.forced?'⚠️ 数据门禁未通过：EV可试算，但不能作为正式模型结论。':'✅ 数据门禁通过：EV层可正式使用。';
+}
+function renderMatches(){
+  let tb=document.getElementById('matchTable'); if(!tb)return; tb.innerHTML=state.matches.map(m=>{let p=calcMatchProbs(m); return `<tr><td>${m.id}</td><td>${esc(m.code)}</td><td>${esc(m.home)} vs ${esc(m.away)}</td><td>${fmt(m.lh,2)} / ${fmt(m.la,2)}</td><td>胜 ${pct(p.pH)}<br>平 ${pct(p.pD)}<br>负 ${pct(p.pA)}</td><td>${p.tot.map((x,i)=>`${i===7?'7+':i}:${pct(x,1)}`).join('<br>')}</td><td class="small">${esc(m.note)}</td><td><button class="danger" onclick="delMatch('${m.id}')">删</button></td></tr>`}).join('')||'<tr><td colspan="8" class="muted">暂无比赛</td></tr>';
+}
+function renderCandidates(){
+  ['cModule','tModule'].forEach(id=>{let el=document.getElementById(id); if(el)el.innerHTML=state.modules.map(m=>`<option value="${m.id}">${esc(m.name)}</option>`).join('')});
+  let tb=document.getElementById('candidateTable'); if(!tb)return; tb.innerHTML=state.candidates.map(c=>{let x=ev(c.prob,c.odds), cls=evClass(x), m=matchById(c.matchId), mod=modById(c.moduleId); return `<tr><td>${c.id}</td><td>${c.matchId}<br><span class="muted tiny">${m?esc(m.home+' vs '+m.away):''}</span></td><td>${esc(c.market)}</td><td>${esc(c.selection)}</td><td>${fmt(c.odds,2)}</td><td>${pct(implied(c.odds))}</td><td>${pct(c.prob)}</td><td class="${x>=0?'green':'red'}">${pct(x)}</td><td><span class="pill ${cls[1]}">${cls[0]}</span></td><td>${mod?esc(mod.name):''}</td><td class="small">${esc(c.reason)}</td><td><button class="danger" onclick="delCandidate('${c.id}')">删</button></td></tr>`}).join('')||'<tr><td colspan="12" class="muted">暂无候选</td></tr>';
+}
+function renderModules(){
+  let tb=document.getElementById('moduleTable'); if(!tb)return; let p=portfolio(); tb.innerHTML=state.modules.map(m=>{let c=moduleCost(m.id), er=moduleER(m.id);return `<tr><td>${m.id}</td><td>${esc(m.name)}</td><td>${fmt(m.share,1)}%</td><td>${esc(m.func)}</td><td>${fmt(c)}</td><td>${p.cost?fmt(c/p.cost*100,1):'0.0'}%</td><td class="small">${esc(m.rule)}<br><span class="muted">ER ${fmt(er)} / EV ${c?pct(er/c-1):'-'}</span></td><td><button class="danger" onclick="delModule('${m.id}')">删</button></td></tr>`}).join('')||'<tr><td colspan="8" class="muted">暂无模块</td></tr>';
+}
+function renderTickets(){
+  let tb=document.getElementById('ticketTable'); if(!tb)return; tb.innerHTML=state.tickets.map(t=>{let m=ticketMetrics(t), mod=modById(t.moduleId);return `<tr><td>${t.id}</td><td>${esc(t.name)}</td><td>${mod?esc(mod.name):''}</td><td>${(t.passes||[]).map(x=>x+'关').join('/')}</td><td>${m.units}</td><td>${fmt(m.cost)}</td><td>${fmt(m.er)}</td><td class="${m.ev>=0?'green':'red'}">${pct(m.ev)}</td><td class="mono small">${t.legs.map(esc).join('<br>')}</td><td class="small">${esc(t.note)}</td><td><button class="danger" onclick="delTicket('${t.id}')">删</button></td></tr>`}).join('')||'<tr><td colspan="11" class="muted">暂无票仓</td></tr>'; renderDupBox(false);
+}
+function renderDupBox(pop){
+  let box=document.getElementById('dupBox'); if(!box)return; let msgs=[];
+  let sigs={}; state.tickets.forEach(t=>{let sig=JSON.stringify({passes:t.passes,legs:t.legs}); if(sigs[sig])msgs.push(`疑似重复：${sigs[sig]} 与 ${t.id}`); else sigs[sig]=t.id});
+  state.tickets.forEach(t=>{let groups=ticketMetrics(t).groups; let mids=groups.flat().map(c=>c.matchId); let dup=mids.filter((x,i)=>mids.indexOf(x)!==i); if(dup.length)msgs.push(`${t.id} 存在同场多腿相关性：${[...new Set(dup)].join(',')}`)});
+  box.innerHTML=msgs.length?msgs.map(x=>`<div class="warnbox box">${x}</div>`).join(''):'<div class="okbox box">暂无明显重复或同场多腿风险。</div>'; if(pop)showToast(msgs.length?'检测到风险':'未检测到明显问题');
+}
+function renderScenarioInputs(){
+  let el=document.getElementById('scenarioInputs'); if(!el)return; el.innerHTML=state.matches.map(m=>`<div class="row"><div class="col-4"><b>${m.id}</b> ${esc(m.home)} vs ${esc(m.away)}</div><div class="col-8"><input id="sc_${m.id}" placeholder="格式：比分|胜平负|总进球|自定义，如 2:1|胜|3|让平"></div></div>`).join('')||'<p class="muted">请先添加比赛。</p>';
+}
+function renderLogs(){let tb=document.getElementById('logTable'); if(!tb)return; tb.innerHTML=state.logs.map((l,i)=>`<tr><td>${new Date(l.time).toLocaleString()}</td><td>${esc(l.version)}</td><td>${esc(l.type)}</td><td>${esc(l.title)}</td><td class="small">${esc(l.goal)}</td><td class="small">${esc(l.body)}</td><td><button class="danger" onclick="delLog(${i})">删</button></td></tr>`).join('')||'<tr><td colspan="7" class="muted">暂无日志</td></tr>'}
+function renderSettings(){setv('setName',state.settings.name);setv('setVer',state.settings.version);setv('setBudget',state.settings.budget);setv('setPrinciples',state.settings.principles);}
+function renderReview(){let el=document.getElementById('reviewStats'); if(!el)return; let n=state.reviews.length, cost=state.reviews.reduce((a,r)=>a+(+r.cost||0),0), ret=state.reviews.reduce((a,r)=>a+(+r.ret||0),0); el.innerHTML=`累计复盘 ${n} 次<br>累计成本 ${fmt(cost)}<br>累计回奖 ${fmt(ret)}<br>累计ROI ${cost?pct((ret-cost)/cost):'-'}`}
+
+function loadSample(){
+  state=initState(); state.settings.budget=250;
+  state.sources=[
+    {id:'S1',type:'官方赔率',name:'用户体彩票面截图',time:new Date().toISOString().slice(0,16),score:95,ref:'最终9张票截图',status:'已核验',note:'以票面赔率和成本为准。'},
+    {id:'S2',type:'用户观察',name:'用户赛前判断',time:new Date().toISOString().slice(0,16),score:72,ref:'聊天记录',status:'已核验',note:'挪威分叉、约旦可咬、法国让深、阿根廷可被奥地利咬。'},
+    {id:'S3',type:'权威新闻',name:'赛前信息占位',time:new Date().toISOString().slice(0,16),score:78,ref:'待v1.3爬虫接入',status:'待二次核验',note:'试用样例占位，正式使用需替换为真实可靠来源。'}];
+  state.matches=[
+    {id:'M1',code:'周一041',home:'阿根廷',away:'奥地利',lh:2.05,la:.65,note:'阿根廷优势，但防奥地利咬一口'},
+    {id:'M2',code:'周一042',home:'法国',away:'伊拉克',lh:3.45,la:.55,note:'法国强，但[-3]深'},
+    {id:'M3',code:'周一043',home:'挪威',away:'塞内加尔',lh:1.95,la:1.25,note:'挪威分叉：打穿或恶心'},
+    {id:'M4',code:'周一044',home:'约旦',away:'阿尔及利亚',lh:.95,la:1.35,note:'阿尔及利亚略优但状态不稳'}];
+  state.candidates=[
+    ['C1','M1','胜平负','胜',1.30,0.72,'MOD1','主路径阿根廷胜'],['C2','M2','总进球','3',3.50,0.22,'MOD1','法国合理3球'],['C3','M2','总进球','4',3.75,0.21,'MOD1','法国合理4球'],['C4','M4','胜平负','负',1.72,0.48,'MOD1','阿尔及利亚胜主路径'],
+    ['C5','M1','让球胜平负','让平',3.56,0.20,'MOD2','阿根廷赢1球'],['C6','M1','让球胜平负','让负',2.83,0.33,'MOD2','阿根廷不穿'],['C7','M2','让球胜平负','让平',4.30,0.19,'MOD2','法国赢3球'],['C8','M2','让球胜平负','让负',2.12,0.53,'MOD2','法国不穿深盘'],['C9','M3','让球胜平负','让负',1.71,0.56,'MOD2','挪威不穿'],['C10','M4','让球胜平负','让胜',2.54,0.44,'MOD2','约旦受让胜'],['C11','M4','让球胜平负','让平',3.35,0.25,'MOD2','约旦受让平'],['C12','M3','让球胜平负','让平',3.78,0.22,'MOD2','挪威赢1球'],
+    ['C13','M1','比分','2:0',6.00,0.12,'MOD3','阿根廷正路比分'],['C14','M1','比分','2:1',6.25,0.13,'MOD3','阿根廷小胜'],['C15','M2','比分','3:0',5.00,0.10,'MOD3','法国正路'],['C16','M2','比分','3:1',10.00,0.07,'MOD3','法国3-1'],['C17','M2','比分','4:1',11.50,0.06,'MOD3','法国4-1'],['C18','M4','比分','0:1',5.60,0.12,'MOD3','阿尔及利亚小胜'],['C19','M4','比分','1:2',6.25,0.10,'MOD3','阿尔及利亚2-1'],
+    ['C20','M1','总进球','2',3.60,0.25,'MOD3','阿根廷2球区'],['C21','M1','总进球','3',3.45,0.23,'MOD3','阿根廷3球区'],['C22','M2','总进球','5',5.20,0.14,'MOD3','法国5球上沿'],['C23','M3','总进球','3',3.45,0.22,'MOD3','挪威3球形态'],['C24','M3','总进球','4',4.10,0.18,'MOD3','挪威4球形态'],
+    ['C25','M1','比分','3:1',8.50,0.08,'MOD4','阿根廷被咬但赢'],['C26','M1','比分','1:1',7.80,0.08,'MOD4','阿根廷被咬平'],['C27','M4','比分','1:0',16.00,0.04,'MOD4','约旦反咬'],['C28','M4','比分','1:1',7.75,0.10,'MOD4','约旦平'],['C29','M4','比分','2:2',16.00,0.04,'MOD4','约旦大平'],['C30','M2','比分','4:0',5.75,0.08,'MOD4','法国打穿'],['C31','M2','比分','5:0',9.00,0.05,'MOD4','法国打疯'],['C32','M2','比分','5:1',17.00,0.03,'MOD4','法国核爆'],['C33','M3','比分','2:2',10.50,0.07,'MOD4','挪威被咬'],['C34','M3','比分','1:2',11.50,0.06,'MOD4','挪威翻车']
+  ].map(x=>({id:x[0],matchId:x[1],market:x[2],selection:x[3],odds:x[4],prob:x[5],moduleId:x[6],reason:x[7]}));
+  state.tickets=[
+    {id:'T1',name:'主仓A',multi:4,moduleId:'MOD1',passes:[2,3],legs:['C1','C2,C3','C4'],note:'阿根廷胜+法国3/4球+阿尔及利亚胜'},
+    {id:'T2',name:'主仓B',multi:2,moduleId:'MOD1',passes:[2],legs:['C5,C6','C7,C8','C4'],note:'强队不完美但阿尔及利亚胜'},
+    {id:'T3',name:'副仓A',multi:1,moduleId:'MOD2',passes:[2],legs:['C5,C6','C7,C8','C9','C10,C11'],note:'第二路径核心'},
+    {id:'T4',name:'副仓B',multi:1,moduleId:'MOD2',passes:[2,3],legs:['C12,C9','C10,C11','C8'],note:'挪威/约旦/法国不穿联动'},
+    {id:'T5',name:'副仓C',multi:2,moduleId:'MOD2',passes:[2],legs:['C9','C10'],note:'小额强化'},
+    {id:'T6',name:'比分收益仓',multi:1,moduleId:'MOD3',passes:[2],legs:['C13,C14','C15,C16,C17','C18,C19'],note:'比分抬收益'},
+    {id:'T7',name:'总进球收益仓',multi:1,moduleId:'MOD3',passes:[2],legs:['C20,C21','C2,C3,C22','C23,C24'],note:'形态收益仓'},
+    {id:'T8',name:'梦尾A',multi:1,moduleId:'MOD4',passes:[1,2],legs:['C25,C26','C27,C28,C29'],note:'阿根廷/约旦深尾'},
+    {id:'T9',name:'梦尾B',multi:1,moduleId:'MOD4',passes:[2],legs:['C30,C31,C32','C33,C34'],note:'法国暴走+挪威翻车'}
+  ];
+  auditGate(); save(); showToast('已加载样例');
+}
+
+function renderTab(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
+document.querySelectorAll('nav button').forEach(b=>b.addEventListener('click',()=>renderTab(b.dataset.tab)));
+renderAll();
+</script>
+</body>
+</html>
